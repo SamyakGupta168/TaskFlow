@@ -1,0 +1,180 @@
+@keyframes floatGlow {
+	0%,
+	100% {
+		transform: translate3d(0, 0, 0) scale(1);
+	}
+
+	50% {
+		transform: translate3d(0, -14px, 0) scale(1.02);
+	}
+}
+
+@keyframes fadeUp {
+	from {
+		opacity: 0;
+		transform: translateY(16px) scale(0.98);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+
+@keyframes softPulse {
+	0%,
+	100% {
+		box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.16);
+	}
+
+	50% {
+		box-shadow: 0 0 0 10px rgba(139, 92, 246, 0);
+	}
+}
+
+.app-shell {
+	position: relative;
+	min-height: calc(100vh - 5rem);
+	overflow: hidden;
+}
+
+.app-shell::before,
+.app-shell::after {
+	content: "";
+	position: absolute;
+	inset: auto;
+	z-index: -1;
+	border-radius: 9999px;
+	filter: blur(16px);
+	opacity: 0.7;
+	animation: floatGlow 12s ease-in-out infinite;
+	pointer-events: none;
+}
+
+.app-shell::before {
+	top: 4rem;
+	left: -3rem;
+	width: 16rem;
+	height: 16rem;
+	background: radial-gradient(circle, rgba(168, 85, 247, 0.22), rgba(168, 85, 247, 0));
+}
+
+.app-shell::after {
+	right: -4rem;
+	bottom: 5rem;
+	width: 18rem;
+	height: 18rem;
+	background: radial-gradient(circle, rgba(59, 130, 246, 0.18), rgba(59, 130, 246, 0));
+	animation-delay: -6s;
+}
+
+.glass-panel {
+	position: relative;
+	background:
+		linear-gradient(180deg, rgba(15, 23, 42, 0.82), rgba(15, 23, 42, 0.68)),
+		linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.82));
+	box-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.06) inset,
+		0 30px 90px rgba(2, 6, 23, 0.65);
+}
+
+.glass-panel::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(135deg, rgba(255, 255, 255, 0.04), transparent 40%);
+	pointer-events: none;
+}
+
+.section-kicker {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	border-radius: 9999px;
+	background: rgba(15, 23, 42, 0.8);
+	padding: 0.5rem 0.9rem;
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.24em;
+	text-transform: uppercase;
+	color: rgb(216, 180, 254);
+	box-shadow: 0 10px 24px rgba(2, 6, 23, 0.22);
+}
+
+.toggle-input {
+	width: 1rem;
+	height: 1rem;
+	accent-color: rgb(167, 139, 250);
+}
+
+.todo-card {
+	animation: fadeUp 420ms ease both;
+	animation-delay: var(--delay, 0ms);
+}
+
+.todo-card:focus-within .todo-row,
+.todo-card:hover .todo-row {
+	transform: translateY(-2px);
+	box-shadow: 0 18px 42px rgba(15, 23, 42, 0.12);
+}
+
+.todo-row {
+	animation: fadeUp 420ms ease both;
+}
+
+.todo-row:has(input:checked) {
+	border-color: rgba(167, 139, 250, 0.3);
+	background: linear-gradient(135deg, rgba(39, 39, 68, 0.95), rgba(17, 24, 39, 0.95));
+}
+
+.todo-text {
+	transition: color 180ms ease, opacity 180ms ease, text-decoration-color 180ms ease;
+}
+
+.todo-row:has(input:checked) .todo-text {
+	color: rgb(148, 163, 184);
+}
+
+.todo-checkbox {
+	transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.todo-checkbox:active {
+	transform: scale(0.92);
+}
+
+.todo-checkbox:checked {
+	animation: softPulse 420ms ease;
+}
+
+.status-dot {
+	width: 0.5rem;
+	height: 0.5rem;
+	border-radius: 9999px;
+	background: rgba(100, 116, 139, 0.85);
+}
+
+.status-dot--done {
+	background: linear-gradient(135deg, rgb(16, 185, 129), rgb(59, 130, 246));
+}
+
+@media (max-width: 640px) {
+	.app-shell {
+		min-height: calc(100vh - 4.5rem);
+	}
+
+	.section-kicker {
+		letter-spacing: 0.18em;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.app-shell::before,
+	.app-shell::after,
+	.todo-card,
+	.todo-row,
+	.todo-checkbox {
+		animation: none !important;
+		transition: none !important;
+	}
+}
