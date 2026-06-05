@@ -8,42 +8,29 @@ import "./App.css";
 
 const App = () => {
   const [todo, setTodo] = useState("");
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState(() => {
+    const todoString = localStorage.getItem("todos");
+    return todoString ? JSON.parse(todoString) : [];
+  });
   const [showFinished, setShowFinished] = useState(true)
 
   useEffect(() => {
-    let todoString = localStorage.getItem("todos")
-    if(todoString) {
-      let todos = JSON.parse(localStorage.getItem("todos"))
-      setTodos(todos)
-    }
-  }, [])
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
   
-
-  function saveToLS() {
-    localStorage.setItem("todos", JSON.stringify(todos))
-  }
-
   function handleEdit(e, id) {
     let t = todos.filter(i => i.id===id)
     setTodo(t[0].todo)
     handleDelete(e, id)
-    saveToLS()
   }
 
   function handleDelete(e, id) {
-    let newTodos = todos.filter((item) => {
-      return item.id !== id;
-    });
-
-    setTodos(newTodos);
-    saveToLS()
+    setTodos((currentTodos) => currentTodos.filter((item) => item.id !== id));
   }
 
   function handleAdd() {
-    setTodos([...todos, { id: uuidv4(), todo, isCompleted: false }]);
+    setTodos((currentTodos) => [...currentTodos, { id: uuidv4(), todo, isCompleted: false }]);
     setTodo("");
-    saveToLS()
   }
 
   function handleChange(e) {
@@ -59,14 +46,13 @@ const App = () => {
   function handleCheckbox(e) {
     let id = e.target.name;
 
-    setTodos(
-      todos.map((todo) => {
+    setTodos((currentTodos) =>
+      currentTodos.map((todo) => {
         return todo.id === id
           ? { ...todo, isCompleted: !todo.isCompleted }
           : todo;
       }),
     );
-    saveToLS()
   }
 
   function toggleFinished(e) {
